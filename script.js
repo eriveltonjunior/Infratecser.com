@@ -51,10 +51,30 @@ if (!form) {
     }
 
     
-    function mostrarErro(campo, texto) {
+function mostrarErro(campo, texto) {
+        const campos = form.querySelectorAll("input, select, textarea");
+        campos.forEach(c => c.classList.remove("erro"));
+        if (campo) {
+            campo.classList.add("erro");
+            campo.focus();
+        }
+        aviso.style.color = "#ff4d4d";
         aviso.textContent = texto;
-        if (campo) campo.focus();
     }
+
+    const camposFormulario = form.querySelectorAll("input, select, textarea");
+    camposFormulario.forEach((campo) => {
+        campo.addEventListener("input", () => {
+            campo.classList.remove("erro");
+            if (aviso.textContent && !document.querySelector(".erro")) {
+                aviso.textContent = "";
+            }
+        });
+        
+        campo.addEventListener("change", () => {
+            campo.classList.remove("erro");
+        });
+    });
 
     const inputHora = document.getElementById('horario');
 
@@ -114,3 +134,72 @@ if (!form) {
         }
     });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const botaoMenu = document.getElementById("botao-menu");
+    const menu = document.getElementById("menu");
+
+    if (!botaoMenu || !menu) {
+        console.error("Erro: Botão do menu ou elemento nav não encontrado no HTML!");
+        return;
+    }
+
+    const icone = botaoMenu.querySelector("i");
+
+    function definirMenu(aberto) {
+        menu.classList.toggle("aberto", aberto);
+        botaoMenu.setAttribute("aria-expanded", String(aberto));
+        botaoMenu.setAttribute("aria-label", aberto ? "Fechar menu" : "Abrir menu");
+        
+        if (icone) {
+            icone.classList.toggle("fa-bars", !aberto);
+            icone.classList.toggle("fa-xmark", aberto);
+        }
+    }
+
+    botaoMenu.addEventListener("click", () => {
+        const estaAberto = menu.classList.contains("aberto");
+        definirMenu(!estaAberto);
+    });
+
+    menu.addEventListener("click", (evento) => {
+        if (evento.target.closest("a")) {
+            definirMenu(false);
+        }
+    });
+
+    document.addEventListener("keydown", (evento) => {
+        if (evento.key === "Escape") {
+            definirMenu(false);
+        }
+    });
+
+    window.matchMedia("(min-width: 1101px)").addEventListener("change", (e) => {
+        if (e.matches) {
+            definirMenu(false);
+        }
+    });
+});
+
+const botaoAgendamentoSlider = document.getElementById("botao-agendamento");
+if (botaoAgendamentoSlider) {
+    botaoAgendamentoSlider.addEventListener("click", () => {
+        const secaoAgendamento = document.getElementById("agendamento");
+        if (secaoAgendamento) {
+            secaoAgendamento.scrollIntoView({ behavior: "smooth" });
+        }
+    });
+}
+
+    function mostrarErro(campo, texto) {
+        const campos = form.querySelectorAll("input, select, textarea");
+        campos.forEach(c => c.classList.remove("erro"));
+
+        if (campo) {
+            campo.classList.add("erro");
+            campo.focus();
+        }
+
+        aviso.style.color = "#ff4d4d";
+        aviso.textContent = texto;
+    }
